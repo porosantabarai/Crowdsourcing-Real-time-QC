@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>B3Q1</title>
+  <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+  <script src="https://assets.crowd.aws/crowd-client.js"></script>
+  
+  <style>
+              body {
+            font-family: Arial, sans-serif;
+            background-color: #e7f8f3fc;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h4 {
+            display: inline-block;
+            padding: 10px;
+            background-color: #a8ea58b9;
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        textarea {
+            width: 800px; /* Set the width of the textarea */
+            height: 150px; /* Set the height of the textarea */
+            font-size: 19px; /* Set the font size of the text inside the textarea */
+            font-family: Arial, sans-serif; /* Set the font family of the text inside the textarea */
+            padding: 10px; /* Add padding to create some space inside the textarea */
+            border: 1px solid #ccc; /* Add a border to the textarea */
+            border-radius: 4px; /* Round the corners of the textarea */
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a box shadow to the textarea */
+            resize: vertical; /* Allow vertical resizing of the textarea */
+        }
+  </style>
+
+
+
+<script
+    src="https://code.jquery.com/jquery-3.1.0.min.js"
+    integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"
+    integrity="sha384-s1ITto93iSMDxlp/79qhWHi+LsIi9Gx6yL+cOKDuymvihkfol83TYbLbOw+W/wv4" crossorigin="anonymous">
+</script><!-- Open internal javascript --><script>
+
+function showStuff(newid, oldid) {
+    document.getElementById(newid).style.display = 'block';
+    // hide the lorem ipsum text
+    document.getElementById(oldid).style.display = 'none';
+    // hide the link
+};
+
+  $(document).ready(function() {
+    // Instructions expand/collapse
+    var content = $('#instructionBody');
+    var trigger = $('#collapseTrigger');
+    content.hide();
+    $('.collapse-text').text('(Click to expand)');
+    trigger.click(function(){
+      content.toggle();
+      var isVisible = content.is(':visible');
+      if(isVisible){
+        $('.collapse-text').text('(Click to collapse)');
+      }else{
+        $('.collapse-text').text('(Click to expand)');
+      }
+    });
+    // end expand/collapse
+  });
+</script>
+
+</head>
+<body>
+
+<h4>Introduction</h4>
+Your introduction about the HIT goes here!
+
+<hr/>
+
+    <p>
+        <h4> Your question goes here</h4>
+    </p>
+    <p> <b>Question:</b> ${Questions}</p>
+    <!--<p>Describe this person's level of focus on a specific area of interest or a specific object.</p>-->
+
+  <crowd-form id="baraiform" onsubmit="performSearch(event)" answer-format="flatten-objects">
+    <!--<input type="text" minlength="110" row="3" cols="100" id="inputText" name="myinput" placeholder="Enter your response" required>-->
+    <textarea type="text" minlength="110"  id="inputText" name="myinput"  placeholder="Enter your response" required></textarea>
+    <input type="hidden" id="Attempts" name = "Attempts" value="">
+
+   <input type="submit" value="Submit" style="background-color: #4CAF50; color: white; font-size: 20px; font-family: Arial, sans-serif; padding: 5px 10px; margin: 5px; border: 2px solid #4CAF50; border-radius: 4px; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); cursor: pointer; width: 150px; height: 40px;" >
+  </crowd-form>
+  
+
+<script>
+let allReferenceNGrams = [];
+let attempt = 0;
+
+function performSearch(event) {
+    
+  attempt++;
+  document.getElementById("Attempts").value = attempt;
+
+  
+  var inputText = document.getElementById("inputText").value;
+  
+  // Define the parameters for the Google Custom Search API request
+  var apiKey = "XYZ"; // Replace with your Google Custom Search API key
+
+
+  var searchEngineId = "abc234XTYG"; // Replace with your Custom Search Engine ID
+
+  var apiUrl =
+    "https://www.googleapis.com/customsearch/v1?key=" +
+    apiKey +
+    "&cx=" +
+    searchEngineId +
+    "&q=" +
+    encodeURIComponent(inputText);
+
+  // Create a new XMLHttpRequest instance
+  var xhr = new XMLHttpRequest();
+
+  // Set up the request
+  xhr.open("GET", apiUrl, false);
+
+//   // Set the response type to JSON
+//   xhr.responseType = "json";
+
+var result = false;
+
+  // Define the event listener for when the request is complete
+  // x = result;
+
+  xhr.onload = function (event) {
+    
+    
+    if (xhr.status === 200) {
+     
+      var searchResults = JSON.parse(xhr.response).items;
+      // Check for misplled incohesive response
+      if(typeof searchResults=== "undefined"){
+        alert("Error: See if you have any missplled words or special characters!"); 
+      } else {
+
+        var searchResultsText = "";
+        for (var i = 0; i < searchResults.length; i++) {
+        searchResultsText += searchResults[i].snippet + "\n";
+      }
+
+      }
+
+    } else {
+      console.log("Error: " + xhr.status);
+      alert("Error: An error occoured while submitting the Hit. Please contact us at: deeplearningnlp-lab@arizona.edu");
+    }
+
+
+        function checkConsecutiveWordMatch(userText, referenceText, n) {
+          
+          const referenceWords = referenceText.toLowerCase().split(' ');
+          const userWords = userText.toLowerCase().split(' ');
+          
+          const userNGrams = [];
+          for (let i = 0; i <= userWords.length - n; i++) {
+            userNGrams.push(userWords.slice(i, i + n).join(' '));
+          }
+
+          const referenceNGrams = [];
+          for (let i = 0; i <= referenceWords.length - n; i++) {
+            referenceNGrams.push(referenceWords.slice(i, i + n).join(' '));
+            
+          }
+          // Store reference n-grams in the global array
+          allReferenceNGrams = [...allReferenceNGrams, ...referenceNGrams];                    
+ 
+            // Log the generated n-grams to the console
+
+
+          for (const ngram of userNGrams) {
+            if (allReferenceNGrams.includes(ngram)) {
+              return true;
+            }
+          }
+
+          return false;
+        }
+        
+
+         var referenceText = searchResultsText;
+         var userText = inputText;
+         const n = 5; // Check for a 5-gram match. Change it according to your sensitivity.
+
+        const isMatch = checkConsecutiveWordMatch(userText, referenceText, n);
+
+        if (!isMatch) {
+            
+            alert("Approved!");
+            //document.getElementById("baraiform").submit();
+            result = true;
+            return true;
+        }
+        else{
+            alert('The input text appeared to be copied from the internet. Please tell us what you have observed.');
+            //alert(document.getElementById("baraiform").text)
+            event.preventDefault();
+            return false; // Prevent form submission
+        }
+
+  };
+
+  // Send the request
+  xhr.send();
+
+  if (result == false)
+  {
+    event.preventDefault();
+  }
+
+  
+
+}
+
+    // Disable paste event
+    document.getElementById('inputText').addEventListener('paste', function (e) {
+      e.preventDefault();
+      alert('Pasting is not allowed in this textarea.');
+    });
+    
+    // Remove repeated spaces on input change
+    document.getElementById('inputText').addEventListener('input', function (e) {
+      var textarea = e.target;
+      var input = textarea.value;
+
+      // Remove repeated spaces
+      var cleanedInput = input.replace(/\s{2,}/g, ' ');
+
+      // Update textarea value
+      if (cleanedInput !== input) {
+        textarea.value = cleanedInput;
+      }
+    });
+
+
+  </script>
+</body>
+</html>
