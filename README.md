@@ -9,8 +9,8 @@ Data quality and interagency remain significant hurdles in efficient crowdsourci
 ## Installation
 
 There is no installation required for this HTML code. 
-- For AMT: Simply include the code in your HTML project or HIT (Human Intelligence Task) template.
-- [For Qualtrics](https://www.qualtrics.com/support/survey-platform/survey-module/question-options/add-javascript/) Simply add the code from Qualtrics Implementation in your desired question. 
+- For AMT: Simply include the code in your HTML project or HIT (Human Intelligence Task) template. Use the AMT.html file.
+- [For Qualtrics](https://www.qualtrics.com/support/survey-platform/survey-module/question-options/add-javascript/) Simply add the code from Qualtrics Implementation in your desired question. Use the Qualtrics.js file.
 
 ## Usage
 
